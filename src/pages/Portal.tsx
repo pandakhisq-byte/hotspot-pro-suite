@@ -162,7 +162,7 @@ export default function Portal() {
                   Track usage, manage devices, top up your wallet and unlock loyalty rewards across all our hotspots.
                 </p>
                 <div className="flex gap-3 mt-6">
-                  <Link to="/login" className="gradient-orange text-primary-foreground font-semibold px-6 py-3 rounded-full shadow-orange">Create Account</Link>
+                  <Link to="/signup" className="gradient-orange text-primary-foreground font-semibold px-6 py-3 rounded-full shadow-orange">Create Account</Link>
                   <Link to="/login" className="neo-sm font-semibold px-6 py-3 rounded-full">Sign In</Link>
                 </div>
               </div>
