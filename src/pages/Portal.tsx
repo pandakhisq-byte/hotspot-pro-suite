@@ -1,20 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Wifi, Signal, Play, Settings, Bell, User, Gauge, Shield, Sparkles, Wallet, Smartphone, BarChart3, Gift, ArrowRight } from "lucide-react";
 import { PackageCard, type Package } from "@/components/portal/PackageCard";
 import { PaymentModal } from "@/components/portal/PaymentModal";
-
-const PACKAGES: Package[] = [
-  { id: "h1", name: "Quick Hour", price: 10, duration: "1 Hour", download: "5 Mbps", upload: "2 Mbps", dataLimit: "500 MB", features: ["Browsing", "Social Media", "1 Device"] },
-  { id: "d1", name: "Daily Boost", price: 50, duration: "24 Hours", download: "10 Mbps", upload: "5 Mbps", dataLimit: "2 GB", badge: "Popular", features: ["HD Streaming", "Video Calls", "1 Device"] },
-  { id: "w1", name: "Weekly Pro", price: 200, duration: "7 Days", download: "15 Mbps", upload: "8 Mbps", dataLimit: "10 GB", badge: "Best Value", features: ["4K Streaming", "Gaming", "2 Devices"] },
-  { id: "m1", name: "Monthly Max", price: 500, duration: "30 Days", download: "25 Mbps", upload: "12 Mbps", dataLimit: "Unlimited", badge: "Unlimited", features: ["Unlimited Data", "All Speeds", "3 Devices"] },
-  { id: "n1", name: "Night Owl", price: 20, duration: "10pm – 6am", download: "20 Mbps", upload: "10 Mbps", dataLimit: "Unlimited", badge: "Night", features: ["Off-peak hours", "Unlimited", "1 Device"] },
-  { id: "we1", name: "Weekend Pass", price: 150, duration: "Sat–Sun", download: "15 Mbps", upload: "8 Mbps", dataLimit: "8 GB", features: ["Fri 6pm – Mon 6am", "2 Devices"] },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Portal() {
   const [selected, setSelected] = useState<Package | null>(null);
+  const [packages, setPackages] = useState<Package[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    supabase
+      .from("packages")
+      .select("id,name,price,duration,download,upload,data_limit,badge,features")
+      .eq("active", true)
+      .order("sort_order")
+      .then(({ data }) => {
+        if (data) setPackages(data as unknown as Package[]);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -45,7 +51,7 @@ export default function Portal() {
                 <span className="absolute top-2 right-2 h-2 w-2 rounded-full gradient-orange" />
               </button>
               <Link to="/login" className="neo-sm h-10 px-4 grid place-items-center text-sm font-semibold gap-2 flex">
-                <User className="h-4 w-4" /> Sign In
+                <User className="h-4 w-4" /> {user ? "Account" : "Sign In"}
               </Link>
             </div>
           </header>
@@ -133,7 +139,7 @@ export default function Portal() {
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {PACKAGES.map((p) => (
+              {packages.map((p) => (
                 <PackageCard key={p.id} pkg={p} onBuy={setSelected} />
               ))}
             </div>
