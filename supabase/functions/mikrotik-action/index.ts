@@ -44,8 +44,10 @@ Deno.serve(async (req) => {
 
   try {
     const { action, routerId } = await req.json();
-    const { data: routers } = await supa.from("routers").select("*").maybe(routerId ? "single" : "all" as any).eq("id", routerId ?? "");
-    const targets = routerId ? [routers as any].filter(Boolean) : (await supa.from("routers").select("*")).data ?? [];
+    const targetsQuery = routerId
+      ? await supa.from("routers").select("*").eq("id", routerId)
+      : await supa.from("routers").select("*");
+    const targets = targetsQuery.data ?? [];
 
     const results: any[] = [];
     for (const r of targets) {

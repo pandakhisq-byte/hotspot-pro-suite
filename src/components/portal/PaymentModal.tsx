@@ -10,9 +10,12 @@ export function PaymentModal({ pkg, onClose }: { pkg: Package | null; onClose: (
   const [status, setStatus] = useState<Status>("input");
   const [countdown, setCountdown] = useState(60);
   const [error, setError] = useState<string | null>(null);
+  const [txId, setTxId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!pkg) { setStatus("input"); setPhone(""); setCountdown(60); setError(null); }
+    if (!pkg) {
+      setStatus("input"); setPhone(""); setCountdown(60); setError(null); setTxId(null);
+    }
   }, [pkg]);
 
   useEffect(() => {
@@ -22,6 +25,21 @@ export function PaymentModal({ pkg, onClose }: { pkg: Package | null; onClose: (
     return () => clearTimeout(t);
   }, [status, countdown]);
 
+  // Realtime listen for this transaction's status flip from the M-Pesa callback
+  useEffect(() => {
+    if (!txId) return;
+    const ch = supabase
+      .channel(`tx-${txId}`)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "transactions", filter: `id=eq.${txId}` },
+        (payload: any) => {
+          const s = payload.new?.status;
+          if (s === "success") setStatus("success");
+          if (s === "failed") setStatus("failed");
+        })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [txId]);
+
   if (!pkg) return null;
 
   const sendStk = async () => {
@@ -30,23 +48,17 @@ export function PaymentModal({ pkg, onClose }: { pkg: Package | null; onClose: (
       setError("Enter a valid Safaricom number e.g. 0712345678");
       return;
     }
-    setError(null);
-    setStatus("waiting");
-    setCountdown(60);
+    setError(null); setStatus("waiting"); setCountdown(60);
 
-    // Record a pending transaction. The Lovable backend / MikroTik engine
-    // will pick this up, trigger M-Pesa STK, and flip status to success.
-    const { data: u } = await supabase.auth.getUser();
-    await supabase.from("transactions").insert({
-      user_id: u.user?.id ?? null,
-      package_id: pkg.id,
-      phone: clean,
-      amount: pkg.price,
-      status: "pending",
+    const { data, error } = await supabase.functions.invoke("mpesa-stk-push", {
+      body: { phone: clean, packageId: pkg.id },
     });
-
-    // Demo: simulate confirmation after ~6s. Replace with realtime listener.
-    setTimeout(() => setStatus("success"), 6000);
+    if (error || !data?.ok) {
+      setError(data?.error ?? error?.message ?? "Could not start payment");
+      setStatus("failed");
+      return;
+    }
+    setTxId(data.transactionId);
   };
 
   return (
@@ -123,9 +135,9 @@ export function PaymentModal({ pkg, onClose }: { pkg: Package | null; onClose: (
               <XCircle className="h-10 w-10 text-destructive" />
             </div>
             <h3 className="font-bold text-xl">Payment Failed</h3>
-            <p className="text-sm text-muted-foreground mt-2">We didn't receive your payment. Try again?</p>
+            <p className="text-sm text-muted-foreground mt-2">{error ?? "We didn't receive your payment. Try again?"}</p>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStatus("input")} className="flex-1 neo-sm py-3 font-semibold text-sm">Change Number</button>
+              <button onClick={() => { setStatus("input"); setError(null); }} className="flex-1 neo-sm py-3 font-semibold text-sm">Change Number</button>
               <button onClick={sendStk} className="flex-1 gradient-orange text-primary-foreground font-semibold py-3 rounded-full shadow-orange">Retry</button>
             </div>
           </div>
