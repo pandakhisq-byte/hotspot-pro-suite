@@ -14,16 +14,253 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      branches: {
+        Row: {
+          created_at: string
+          id: string
+          location: string | null
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      devices: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          mac: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          mac: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          mac?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      packages: {
+        Row: {
+          active: boolean
+          badge: string | null
+          created_at: string
+          data_limit: string
+          download: string
+          duration: string
+          features: Json
+          id: string
+          name: string
+          price: number
+          sort_order: number
+          upload: string
+        }
+        Insert: {
+          active?: boolean
+          badge?: string | null
+          created_at?: string
+          data_limit: string
+          download: string
+          duration: string
+          features?: Json
+          id?: string
+          name: string
+          price: number
+          sort_order?: number
+          upload: string
+        }
+        Update: {
+          active?: boolean
+          badge?: string | null
+          created_at?: string
+          data_limit?: string
+          download?: string
+          duration?: string
+          features?: Json
+          id?: string
+          name?: string
+          price?: number
+          sort_order?: number
+          upload?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          wallet_balance: number
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+          wallet_balance?: number
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          wallet_balance?: number
+        }
+        Relationships: []
+      }
+      routers: {
+        Row: {
+          bandwidth: string
+          branch_id: string | null
+          cpu: number
+          created_at: string
+          id: string
+          ip: string
+          name: string
+          ram: number
+          status: string
+          uptime: string | null
+          users: number
+        }
+        Insert: {
+          bandwidth?: string
+          branch_id?: string | null
+          cpu?: number
+          created_at?: string
+          id?: string
+          ip: string
+          name: string
+          ram?: number
+          status?: string
+          uptime?: string | null
+          users?: number
+        }
+        Update: {
+          bandwidth?: string
+          branch_id?: string | null
+          cpu?: number
+          created_at?: string
+          id?: string
+          ip?: string
+          name?: string
+          ram?: number
+          status?: string
+          uptime?: string | null
+          users?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routers_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          mpesa_receipt: string | null
+          package_id: string | null
+          phone: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          mpesa_receipt?: string | null
+          package_id?: string | null
+          phone: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          mpesa_receipt?: string | null
+          package_id?: string | null
+          phone?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +387,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
