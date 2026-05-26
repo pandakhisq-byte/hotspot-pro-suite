@@ -1,12 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { Clock, Database, Wallet, Smartphone, Gauge, Activity, Plus, RefreshCw, Headphones } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import { PortalShell } from "@/components/portal/PortalShell";
-
-export const Route = createFileRoute("/dashboard")({
-  component: Dashboard,
-  head: () => ({ meta: [{ title: "Dashboard — ILNOIS Tech" }] }),
-});
 
 const usage = [
   { d: "Mon", mb: 420 }, { d: "Tue", mb: 780 }, { d: "Wed", mb: 540 },
@@ -29,9 +23,9 @@ function Stat({ icon: Icon, label, value, sub }: { icon: any; label: string; val
   );
 }
 
-function Dashboard() {
+export default function Dashboard() {
   return (
-    <PortalShell active="Dashboard">
+    <PortalShell>
       <div className="flex items-end justify-between mb-6">
         <div>
           <p className="text-xs font-bold tracking-widest text-primary uppercase">My Account</p>

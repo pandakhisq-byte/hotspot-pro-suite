@@ -1,18 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Wifi, Signal, Play, Settings, Bell, User, Gauge, Shield, Sparkles, Wallet, Smartphone, BarChart3, Gift, ArrowRight } from "lucide-react";
 import { PackageCard, type Package } from "@/components/portal/PackageCard";
 import { PaymentModal } from "@/components/portal/PaymentModal";
-
-export const Route = createFileRoute("/")({
-  component: Portal,
-  head: () => ({
-    meta: [
-      { title: "ILNOIS Tech — Buy Internet Instantly" },
-      { name: "description", content: "Connect to fast, reliable WiFi. Pay with M-Pesa. No registration required." },
-    ],
-  }),
-});
 
 const PACKAGES: Package[] = [
   { id: "h1", name: "Quick Hour", price: 10, duration: "1 Hour", download: "5 Mbps", upload: "2 Mbps", dataLimit: "500 MB", features: ["Browsing", "Social Media", "1 Device"] },
@@ -23,14 +13,13 @@ const PACKAGES: Package[] = [
   { id: "we1", name: "Weekend Pass", price: 150, duration: "Sat–Sun", download: "15 Mbps", upload: "8 Mbps", dataLimit: "8 GB", features: ["Fri 6pm – Mon 6am", "2 Devices"] },
 ];
 
-function Portal() {
+export default function Portal() {
   const [selected, setSelected] = useState<Package | null>(null);
 
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-7xl p-4 md:p-8">
         <div className="neo p-5 md:p-10">
-          {/* Top bar */}
           <header className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-2">
               <div className="h-10 w-10 rounded-2xl gradient-orange grid place-items-center shadow-orange">
@@ -45,8 +34,8 @@ function Portal() {
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
               <a className="text-foreground">Packages</a>
               <a>Coverage</a>
-              <a>Support</a>
-              <a>About</a>
+              <Link to="/dashboard">Dashboard</Link>
+              <Link to="/admin">Admin</Link>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -55,13 +44,12 @@ function Portal() {
                 <Bell className="h-4 w-4" />
                 <span className="absolute top-2 right-2 h-2 w-2 rounded-full gradient-orange" />
               </button>
-              <Link to="/" className="neo-sm h-10 px-4 grid place-items-center text-sm font-semibold gap-2 flex">
+              <Link to="/login" className="neo-sm h-10 px-4 grid place-items-center text-sm font-semibold gap-2 flex">
                 <User className="h-4 w-4" /> Sign In
               </Link>
             </div>
           </header>
 
-          {/* HERO */}
           <section className="grid md:grid-cols-12 gap-8 items-center">
             <div className="md:col-span-5">
               <div className="inline-flex items-center gap-2 neo-sm px-3 py-1.5 mb-5">
@@ -100,7 +88,6 @@ function Portal() {
               </div>
             </div>
 
-            {/* Hero visual */}
             <div className="md:col-span-7 relative grid place-items-center min-h-[380px]">
               <div className="absolute inset-0 grid place-items-center">
                 <div className="h-80 w-80 rounded-full neo-inset" />
@@ -111,12 +98,10 @@ function Portal() {
                 <Wifi className="h-24 w-24 text-primary" strokeWidth={1.5} />
               </div>
 
-              {/* Floating play button */}
               <button className="absolute bottom-6 h-16 w-16 rounded-full gradient-orange shadow-orange grid place-items-center">
                 <Play className="h-6 w-6 text-primary-foreground fill-current" />
               </button>
 
-              {/* Floating speed widget */}
               <div className="absolute top-4 right-4 neo-sm px-4 py-3">
                 <p className="text-[10px] text-muted-foreground">Live Speed</p>
                 <p className="text-xl font-extrabold text-gradient-orange">24.8 <span className="text-xs text-muted-foreground font-medium">Mbps</span></p>
@@ -132,7 +117,6 @@ function Portal() {
             </div>
           </section>
 
-          {/* PACKAGES */}
           <section id="packages" className="mt-14">
             <div className="flex items-end justify-between mb-6">
               <div>
@@ -155,7 +139,6 @@ function Portal() {
             </div>
           </section>
 
-          {/* SIGN IN BANNER */}
           <section className="mt-14 neo p-8 md:p-10 relative overflow-hidden">
             <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full gradient-orange opacity-10" />
             <div className="absolute -right-10 -bottom-16 h-52 w-52 rounded-full gradient-orange opacity-5" />
@@ -173,8 +156,8 @@ function Portal() {
                   Track usage, manage devices, top up your wallet and unlock loyalty rewards across all our hotspots.
                 </p>
                 <div className="flex gap-3 mt-6">
-                  <button className="gradient-orange text-primary-foreground font-semibold px-6 py-3 rounded-full shadow-orange">Create Account</button>
-                  <button className="neo-sm font-semibold px-6 py-3 rounded-full">Sign In</button>
+                  <Link to="/login" className="gradient-orange text-primary-foreground font-semibold px-6 py-3 rounded-full shadow-orange">Create Account</Link>
+                  <Link to="/login" className="neo-sm font-semibold px-6 py-3 rounded-full">Sign In</Link>
                 </div>
               </div>
 
@@ -198,7 +181,6 @@ function Portal() {
             </div>
           </section>
 
-          {/* Footer */}
           <footer className="mt-12 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
             <p>© 2026 ILNOIS Tech · White-label Hotspot Billing Platform</p>
             <div className="flex gap-5">

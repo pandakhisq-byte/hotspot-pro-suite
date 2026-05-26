@@ -1,12 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { Users, UserCheck, UserX, DollarSign, TrendingUp, Building2, Router, Activity, Gauge, AlertTriangle, Heart, RefreshCw, Power, Upload, HardDrive, Cpu, MoreVertical } from "lucide-react";
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area, CartesianGrid } from "recharts";
 import { PortalShell } from "@/components/portal/PortalShell";
-
-export const Route = createFileRoute("/admin")({
-  component: Admin,
-  head: () => ({ meta: [{ title: "Command Center — ILNOIS Tech" }] }),
-});
 
 const revenue = Array.from({ length: 14 }, (_, i) => ({ d: `D${i+1}`, v: 800 + Math.random() * 1800 }));
 const packagesPop = [
@@ -36,9 +30,9 @@ function Stat({ icon: Icon, label, value, trend, accent }: { icon: any; label: s
   );
 }
 
-function Admin() {
+export default function Admin() {
   return (
-    <PortalShell active="Admin">
+    <PortalShell>
       <div className="flex items-end justify-between mb-6">
         <div>
           <p className="text-xs font-bold tracking-widest text-primary uppercase">Super Admin</p>
@@ -109,7 +103,6 @@ function Admin() {
         </div>
       </div>
 
-      {/* ROUTER ENGINE */}
       <div className="neo p-6">
         <div className="flex items-center justify-between mb-5">
           <div>

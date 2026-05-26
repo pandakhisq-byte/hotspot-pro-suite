@@ -1,13 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Wifi, Smartphone, Mail, Lock, KeyRound } from "lucide-react";
 
-export const Route = createFileRoute("/login")({
-  component: Login,
-  head: () => ({ meta: [{ title: "Sign in — ILNOIS Tech" }] }),
-});
-
-function Login() {
+export default function Login() {
   const [mode, setMode] = useState<"password" | "otp">("password");
   return (
     <div className="min-h-screen bg-background grid place-items-center p-4">

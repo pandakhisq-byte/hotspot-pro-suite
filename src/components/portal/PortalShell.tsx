@@ -1,8 +1,9 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import { Wifi, Settings, Bell, User } from "lucide-react";
 import type { ReactNode } from "react";
 
-export function PortalShell({ children, active }: { children: ReactNode; active?: string }) {
+export function PortalShell({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
   const nav = [
     { to: "/", label: "Portal" },
     { to: "/dashboard", label: "Dashboard" },
@@ -26,19 +27,22 @@ export function PortalShell({ children, active }: { children: ReactNode; active?
             </Link>
 
             <nav className="hidden md:flex items-center gap-2 text-sm font-medium">
-              {nav.map((n) => (
-                <Link
-                  key={n.to}
-                  to={n.to}
-                  className={
-                    active === n.label
-                      ? "gradient-orange text-primary-foreground px-4 py-2 rounded-full font-semibold"
-                      : "neo-sm px-4 py-2 rounded-full text-muted-foreground"
-                  }
-                >
-                  {n.label}
-                </Link>
-              ))}
+              {nav.map((n) => {
+                const active = pathname === n.to;
+                return (
+                  <Link
+                    key={n.to}
+                    to={n.to}
+                    className={
+                      active
+                        ? "gradient-orange text-primary-foreground px-4 py-2 rounded-full font-semibold"
+                        : "neo-sm px-4 py-2 rounded-full text-muted-foreground"
+                    }
+                  >
+                    {n.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="flex items-center gap-3">
