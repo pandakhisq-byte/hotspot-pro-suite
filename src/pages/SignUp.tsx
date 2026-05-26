@@ -66,10 +66,10 @@ export default function SignUp() {
         </div>
 
         <form className="space-y-3" onSubmit={onSubmit}>
-          <Field icon={User} value={form.full_name} onChange={(v) => setForm({ ...form, full_name: v })} placeholder="Full name" />
-          <Field icon={Smartphone} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} placeholder="Phone (+2547…)" />
-          <Field icon={Mail} value={form.email} onChange={(v) => setForm({ ...form, email: v })} placeholder="Email" type="email" />
-          <Field icon={Lock} value={form.password} onChange={(v) => setForm({ ...form, password: v })} placeholder="Password (min 6)" type="password" />
+          <Field icon={User} value={form.full_name} onChange={(v: string) => setForm({ ...form, full_name: v })} placeholder="Full name" />
+          <Field icon={Smartphone} value={form.phone} onChange={(v: string) => setForm({ ...form, phone: v })} placeholder="Phone (+2547…)" />
+          <Field icon={Mail} value={form.email} onChange={(v: string) => setForm({ ...form, email: v })} placeholder="Email" type="email" />
+          <Field icon={Lock} value={form.password} onChange={(v: string) => setForm({ ...form, password: v })} placeholder="Password (min 6)" type="password" />
 
           <button disabled={loading} className="w-full gradient-orange text-primary-foreground font-semibold py-3.5 rounded-full shadow-orange disabled:opacity-60">
             {loading ? "Creating…" : "Create Account"}
