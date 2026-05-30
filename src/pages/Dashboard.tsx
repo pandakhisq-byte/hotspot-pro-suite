@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Clock, Database, Wallet, Smartphone, Gauge, Activity, Plus, RefreshCw, Headphones } from "lucide-react";
-import { LineChart, Line, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 import { PortalShell } from "@/components/portal/PortalShell";
 import { PaymentModal } from "@/components/portal/PaymentModal";
 import type { Package } from "@/components/portal/PackageCard";
@@ -191,5 +191,4 @@ export default function Dashboard() {
     </PortalShell>
   );
 }
-{/* Recharts imports kept for the area chart above */}
-void LineChart; void Line;
+
