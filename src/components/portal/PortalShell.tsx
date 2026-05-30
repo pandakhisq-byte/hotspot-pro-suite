@@ -1,12 +1,15 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Wifi, Settings, Bell, LogOut, User as UserIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { Wifi, Settings, LogOut, User as UserIcon } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { SettingsModal } from "@/components/SettingsModal";
+import { NotificationsPopover } from "@/components/NotificationsPopover";
 
 export function PortalShell({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const nav = useNavigate();
   const { user, isAdmin, signOut } = useAuth();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const tabs = [
     { to: "/", label: "Portal" },
     { to: "/dashboard", label: "Dashboard" },
@@ -40,11 +43,10 @@ export function PortalShell({ children }: { children: ReactNode }) {
             </nav>
 
             <div className="flex items-center gap-3">
-              <button className="neo-sm h-10 w-10 grid place-items-center"><Settings className="h-4 w-4" /></button>
-              <button className="neo-sm h-10 w-10 grid place-items-center relative">
-                <Bell className="h-4 w-4" />
-                <span className="absolute top-2 right-2 h-2 w-2 rounded-full gradient-orange" />
+              <button onClick={() => setSettingsOpen(true)} title="Settings" className="neo-sm h-10 w-10 grid place-items-center">
+                <Settings className="h-4 w-4" />
               </button>
+              <NotificationsPopover />
               {user ? (
                 <button onClick={async () => { await signOut(); nav("/"); }} className="neo-sm h-10 px-4 grid place-items-center gap-2 flex text-sm font-semibold">
                   <LogOut className="h-4 w-4" /> Sign out
@@ -60,6 +62,7 @@ export function PortalShell({ children }: { children: ReactNode }) {
           {children}
         </div>
       </div>
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }
