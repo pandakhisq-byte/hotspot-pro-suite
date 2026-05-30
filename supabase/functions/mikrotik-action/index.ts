@@ -96,6 +96,13 @@ Deno.serve(async (req) => {
           results.push({ id: r.id, ok: res.ok });
           break;
         }
+        case "test": {
+          // Ping the device's REST identity endpoint and update status
+          const res = await rosFetch(r.ip, "/system/identity");
+          await supa.from("routers").update({ status: res.ok ? "online" : "offline" }).eq("id", r.id);
+          results.push({ id: r.id, ok: res.ok, status: res.status, data: res.data });
+          break;
+        }
         case "add-hotspot-user": {
           // Called after successful M-Pesa payment to provision a user
           // Expects extra body fields: { username, password, profile, transactionId }
